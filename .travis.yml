@@ -1,0 +1,15 @@
+language: node_js
+sudo: required
+before_install:
+- docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+install: true
+before_script:
+- export DOCKER_HOST="$HOST_NAME"
+script:
+- docker build -t tuchphon/htmltest .
+- docker push tuchphon/htmltest
+after_success:
+- docker stop htmltest
+- docker rm htmltest
+- docker run -p 8088:80 -d --name htmltest tuchphon/htmltest:latest
+service: docker
